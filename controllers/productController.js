@@ -1,10 +1,12 @@
 // controllers/productController.js
 const Product = require('../models/productModel')
 const multer = require('multer')
+const Joi = require('joi');
+
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './photo/')
+    cb(null, './photo')
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + '-' + file.originalname)
@@ -42,12 +44,28 @@ const addProduct = async (req, res) => {
   const productData = req.body;
   
   try {
-    // Validate required fields
-    if (!productData.name || !productData.price || !productData.stock || !req.file) {
-      return res.status(400).json({ error: 'Name, price, stock, and image file are required fields' });
+    // Define schema for input validation using Joi
+    if (!productData.name) {
+      return res.status(400).json({ error: 'Name is required' });
+    }
+    if (!productData.price) {
+      return res.status(400).json({ error: 'Price is required' });
+    }
+    if (!productData.description) {
+      return res.status(400).json({ error: 'des is required' });
+    }
+    if (!req.file) {
+      return res.status(400).json({ error: 'Image file is required' });
     }
 
-    // Assuming req.file.path contains the path to the uploaded image
+    // Validate product data against the schema
+    // const { error } = schema.validate(productData, { abortEarly: false });
+    // if (error) {
+    //   // Return validation error message if validation fails
+    //   const errorMessage = error.details.map((detail) => detail.message).join(', ');
+    //   return res.status(400).json({ error: errorMessage });
+    // }
+
     productData.image_path = req.file.path;
 
     const productId = await Product.addProduct(productData);

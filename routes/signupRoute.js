@@ -8,6 +8,7 @@ const upload = multer();
 // Signup route
 router.post('/signup',upload.none(), UserController.createUser);
 router.post('/login', upload.none(), LoginController.login);
+router.get('/getusers', UserController.getAllUser);
 
 
 module.exports = router;

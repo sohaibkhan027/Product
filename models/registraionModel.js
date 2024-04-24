@@ -1,7 +1,5 @@
 const pool = require('../config/db');
-
 const bcrypt = require('bcrypt');
-
 const saltRounds = 10; 
 
 const User = {
@@ -13,7 +11,7 @@ const User = {
           'INSERT INTO users (name, email, phone, password) VALUES (?, ?, ?, ?)',
           [name, email, phone, hashedPassword]
         );
-        return result.insertId;
+        return result.insertId
     } catch (error) {
       throw error;
     }
@@ -23,7 +21,7 @@ const User = {
       const [rows] = await pool.execute(
         'SELECT * FROM users WHERE email = ? LIMIT 1',
         [email]
-      );
+      )
       if (rows.length === 0) {
         return null;
       }
@@ -36,7 +34,17 @@ const User = {
 
       return user; 
     } catch (error) {
-      throw error;
+      throw error
+    }
+  },
+
+  async getAllUser(){
+    try {
+      const [rowsData] = await pool.execute('SELECT * FROM users');
+      // console.log(rowsData); 
+      return rowsData; 
+    } catch (error) {
+      throw error; 
     }
   }
 };

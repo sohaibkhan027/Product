@@ -13,7 +13,7 @@ const AuthController = {
       }
 
       // Generate JWT token
-      const token = generateToken({ userId: user.id, email: user.email });
+      const token = generateToken({ userId: user.id, email: user.email,name: user.name });
       res.status(200).json({ message: 'Login successful', token: token });
     } catch (error) {
       console.error('Error logging in user:', error);

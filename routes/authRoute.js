@@ -3,11 +3,16 @@ const router = express.Router();
 const AuthController = require('../controllers/authController');
 
 // Authorization middleware
-router.use(AuthController.authorize);
+router.get('/protected', AuthController.authorize, (req, res) => {
+  const { role } = req.user; // Access the user's role from the decoded JWT token
 
-// Protected route example
-router.get('/protected', (req, res) => {
-  res.json({ message: 'This is a protected route', user: req.user });
-});
+  if (role === 'admin' || role === 'superadmin') {
+    // Only admins have access to this route
+    res.json({ message: 'Admin access granted', user: req.user });
+  } else {
+    res.status(403).json({ error: 'Access denied. You are not authorized to access this route.' });
+  }
+})
+
 
 module.exports = router;
